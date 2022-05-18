@@ -8,12 +8,7 @@ class Song {
 
 class UI {
   static displaySongs() {
-    const storedSongs = [
-      { title: 'Angel Baby', artist: 'Troye Sivan', album: 'IDK' },
-      { title: 'wow Baby', artist: 'okay Sivan', album: 'IDK' },
-    ];
-    const songs = storedSongs;
-
+    const songs = Store.getSong();
     songs.forEach((song) => UI.addToList(song));
   }
 
@@ -56,6 +51,37 @@ class UI {
   }
 }
 
+class Store {
+  static getSong() {
+    let songs;
+    if (localStorage.getItem('songs') === null) {
+      songs = [];
+    } else {
+      songs = JSON.parse(localStorage.getItem('songs'));
+    }
+    return songs;
+  }
+
+  static addSong(song) {
+    const songs = Store.getSong();
+    songs.push(song);
+
+    localStorage.setItem('songs', JSON.stringify(songs));
+  }
+
+  static removeSong(title) {
+    const songs = Store.getSong();
+
+    songs.forEach((song, index) => {
+      if (song.title === title) {
+        songs.splice(index, 1);
+      }
+    });
+
+    localStorage.setItem('songs', JSON.stringify(songs));
+  }
+}
+
 // Event:Displaying a song
 document.addEventListener('DOMContentLoaded', UI.displaySongs);
 
@@ -74,6 +100,10 @@ form.addEventListener('submit', (e) => {
   } else {
     const song = new Song(title, artist, album);
     UI.addToList(song);
+
+    //Store
+    Store.addSong(song);
+
     UI.showAlert('Song Added', 'green');
     // Clear Fields
     UI.clearFields();
@@ -83,5 +113,8 @@ form.addEventListener('submit', (e) => {
 // Remove a song
 document.querySelector('#song-list').addEventListener('click', (e) => {
   UI.removeSong(e.target);
+  Store.removeSong(
+    e.target.parentElement.parentElement.firstElementChild.textContent
+  );
   UI.showAlert('Song Removed', 'red ');
 });
