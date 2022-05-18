@@ -1,0 +1,17 @@
+h1 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+div.row {
+  box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.75);
+}
+
+.alert-red {
+  background-color: red;
+  color: white;
+}
+
+.alert-green {
+  background-color: green;
+  color: white;
+}
